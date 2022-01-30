@@ -12,10 +12,14 @@ struct Play: View {
     
     @Environment(\.presentationMode) var presentationMode
     
+    @ObservedObject var audioManager = AudioManager()
+    
     @State var room: GameRoom
     var weapons = ["Rock", "Scissors", "Paper"]
     
+    @State var didGuestJoin: Bool = false
     @State var isHost: Bool = false
+    @State var buttonText: String = "Go !"
     @State var selectedWeapon: String = ""
     @State var hostSelection: String = ""
     @State var guestSelection: String = ""
@@ -65,14 +69,14 @@ struct Play: View {
                     Button(action: {
                         getReady()
                     }, label: {
-                        GoButton()
+                        GoButton(text: buttonText)
                     })
                 }
                 VStack {
                     HStack {
                         Text("Connected:")
                             .foregroundColor(.white)
-                        Image(systemName: room.guest?.id != nil ? "checkmark" : "square")
+                        Image(systemName: "checkmark")
                             .foregroundColor(.white)
                     }
                     .padding()
@@ -81,10 +85,10 @@ struct Play: View {
                         Text("Ready:")
                             .foregroundColor(.white)
                         if isHost {
-                            Image(systemName: room.guestStatus ? "checkmark" : "square")
+                            Image(systemName: room.hostStatus ? "checkmark" : "square")
                                 .foregroundColor(.white)
                         } else {
-                            Image(systemName: room.hostStatus ? "checkmark" : "square")
+                            Image(systemName: room.guestStatus ? "checkmark" : "square")
                                 .foregroundColor(.white)
                         }
                     }
@@ -118,6 +122,10 @@ struct Play: View {
                             })
                             
                         }
+                        .onAppear{
+                            audioManager.loadAudio(filename: "beginning", ext: "wav")
+                            audioManager.playAudio()
+                        }
                     }
                 }
                 .padding()
@@ -133,11 +141,11 @@ struct Play: View {
                     HStack {
                         VStack {
                             Text(room.host.username ?? "")
-                            Image(hostSelection.lowercased()).frame(width: 100, height: 100).scaledToFill()
+                            Image(hostSelection.lowercased()).resizable().frame(width: 64, height: 64)
                         }.padding()
                         VStack {
                             Text(room.guest?.username ?? "")
-                            Image(guestSelection.lowercased()).frame(width: 100, height: 100).scaledToFit()
+                            Image(guestSelection.lowercased()).resizable().frame(width: 64, height: 64)
                         }.padding()
                         
                     }
@@ -156,9 +164,12 @@ struct Play: View {
                 .padding()
                 .background(lightGray)
                 .cornerRadius(10)
+                .onAppear{
+                    audioManager.loadAudio(filename: "ending", ext: "wav")
+                    audioManager.playAudio()
+                }
             }
         }.onAppear {
-            print(room.id!)
             let ref = Database.database()
                 .reference().child("rooms").child(room.id!)
             if room.host.id == Auth.auth().currentUser!.uid {
@@ -294,8 +305,36 @@ struct Play: View {
                                 guestSelection: roomDict!["guestSelection"]! as! String,
                                 status: roomDict!["status"]! as! Int)
                 
+                if room.guest == nil || room.guest?.id == nil {
+                    didGuestJoin = false
+                } else {
+                    if !didGuestJoin {
+                        audioManager.loadAudio(filename: "guest_arrive", ext: "wav")
+                        audioManager.playAudio()
+                    }
+                    didGuestJoin = true
+                }
+                
+                
+                if isHost {
+                    if (room.guestStatus && !room.hostStatus && isCurrentlyPreparing) ||
+                        (!room.guestStatus && room.hostStatus && !isCurrentlyPreparing) {
+                        buttonText = "Waiting for opponent"
+                    } else {
+                        buttonText = "Go !"
+                    }
+                } else {
+                    if (room.hostStatus && !room.guestStatus && isCurrentlyPreparing) ||
+                        (!room.hostStatus && room.guestStatus && !isCurrentlyPreparing) {
+                        buttonText = "Waiting for opponent"
+                    } else {
+                        buttonText = "Go !"
+                    }
+                }
+                
+                
+                
                 if room.hostStatus && room.guestStatus && room.hostSelection.isEmpty && room.guestSelection.isEmpty {
-                    actionText = "Choose One !"
                     isReady = true
                     delayText()
                 }
@@ -372,8 +411,10 @@ struct WeaponView: View {
         VStack {
             //Text(text).foregroundColor(.orange)
             Image(image)
+                .resizable()
+                .frame(width: 64, height: 64)
         }
-        .frame(width: 96, height: 96)
+        .padding()
         .overlay(
             Circle()
                 .strokeBorder(selectedWeapon == text ? Color.white : Color.clear, lineWidth: 1)
@@ -383,8 +424,11 @@ struct WeaponView: View {
 }
 
 struct GoButton: View {
+    
+    var text: String
+    
     var body: some View {
-        Text("Go !")
+        Text(text)
             .font(.headline)
             .foregroundColor(.black)
             .frame(width: 220, height: 60)

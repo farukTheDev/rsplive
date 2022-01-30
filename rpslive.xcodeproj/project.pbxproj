@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0032B4F827A6920700811170 /* AppUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0032B4F727A6920600811170 /* AppUtils.swift */; };
+		00C7987627A6A81200D8091F /* ending.wav in Resources */ = {isa = PBXBuildFile; fileRef = 00C7987527A6A81200D8091F /* ending.wav */; };
+		00C7987827A6A92300D8091F /* beginning.wav in Resources */ = {isa = PBXBuildFile; fileRef = 00C7987727A6A92300D8091F /* beginning.wav */; };
+		00C7987A27A6A9AA00D8091F /* guest_arrive.wav in Resources */ = {isa = PBXBuildFile; fileRef = 00C7987927A6A9AA00D8091F /* guest_arrive.wav */; };
 		00EEF13F279B4BF60067E20E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EEF13E279B4BF60067E20E /* AppDelegate.swift */; };
 		00EEF141279B4BF60067E20E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EEF140279B4BF60067E20E /* SceneDelegate.swift */; };
 		00EEF143279B4BF60067E20E /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00EEF142279B4BF60067E20E /* ContentView.swift */; };
@@ -33,6 +37,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0032B4F727A6920600811170 /* AppUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUtils.swift; sourceTree = "<group>"; };
+		00C7987527A6A81200D8091F /* ending.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ending.wav; sourceTree = "<group>"; };
+		00C7987727A6A92300D8091F /* beginning.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beginning.wav; sourceTree = "<group>"; };
+		00C7987927A6A9AA00D8091F /* guest_arrive.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = guest_arrive.wav; sourceTree = "<group>"; };
 		00EEF13B279B4BF60067E20E /* rpslive.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rpslive.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00EEF13E279B4BF60067E20E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		00EEF140279B4BF60067E20E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -71,6 +79,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0032B4F927A6929F00811170 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				00C7987727A6A92300D8091F /* beginning.wav */,
+				00C7987527A6A81200D8091F /* ending.wav */,
+				00C7987927A6A9AA00D8091F /* guest_arrive.wav */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
 		00EEF132279B4BF60067E20E = {
 			isa = PBXGroup;
 			children = (
@@ -90,6 +108,7 @@
 		00EEF13D279B4BF60067E20E /* rpslive */ = {
 			isa = PBXGroup;
 			children = (
+				0032B4F927A6929F00811170 /* Helpers */,
 				00EEF17927A09AEA0067E20E /* GoogleService-Info.plist */,
 				00EEF174279D9D6E0067E20E /* Models */,
 				00EEF154279B4FF50067E20E /* View */,
@@ -102,6 +121,7 @@
 				00EEF146279B4BFD0067E20E /* Preview Content */,
 				00EEF155279B60820067E20E /* Extensions.swift */,
 				00EEF159279B6EFC0067E20E /* PresentAsModalExtension.swift */,
+				0032B4F727A6920600811170 /* AppUtils.swift */,
 			);
 			path = rpslive;
 			sourceTree = "<group>";
@@ -204,8 +224,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				00C7987827A6A92300D8091F /* beginning.wav in Resources */,
+				00C7987A27A6A9AA00D8091F /* guest_arrive.wav in Resources */,
 				00EEF14B279B4BFD0067E20E /* LaunchScreen.storyboard in Resources */,
 				00EEF148279B4BFD0067E20E /* Preview Assets.xcassets in Resources */,
+				00C7987627A6A81200D8091F /* ending.wav in Resources */,
 				00EEF145279B4BFD0067E20E /* Assets.xcassets in Resources */,
 				00EEF17A27A09AEA0067E20E /* GoogleService-Info.plist in Resources */,
 			);
@@ -221,6 +244,7 @@
 				00EEF156279B60820067E20E /* Extensions.swift in Sources */,
 				00EEF15A279B6EFD0067E20E /* PresentAsModalExtension.swift in Sources */,
 				00EEF13F279B4BF60067E20E /* AppDelegate.swift in Sources */,
+				0032B4F827A6920700811170 /* AppUtils.swift in Sources */,
 				00EEF178279D9DC20067E20E /* Gamer.swift in Sources */,
 				00EEF173279D78330067E20E /* Games.swift in Sources */,
 				00EEF141279B4BF60067E20E /* SceneDelegate.swift in Sources */,

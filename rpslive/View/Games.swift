@@ -22,40 +22,55 @@ struct Games: View {
     @State var searchText: String = ""
     @State var newRoomName: String = ""
     @State var showNewRoomDialog: Bool = false
+    @State var showCantJoinAlert: Bool = false
     
     var body: some View {
         ZStack {
             Color(.black).ignoresSafeArea()
             VStack {
+                /*
                 SearchTextField(text: $searchText)
                     .padding()
-                ScrollView {
-                    LazyVGrid(columns: columns) {
-                        if !rooms.isEmpty {
+                 */
+                
+                if !rooms.isEmpty {
+                    ScrollView {
+                        LazyVGrid(columns: columns) {
                             ForEach(0...rooms.count - 1, id: \.self) { i in
                                 GameRoomView(room: rooms[i]).onTapGesture {
                                     UIDevice.vibrate()
-                                    self.viewControllerHolder?.present(style: .automatic, transitionStyle: .crossDissolve) {
-                                        Play(room: rooms[i])
+                                    if rooms[i].guest == nil || rooms[i].guest?.id == nil {
+                                        self.viewControllerHolder?.present(style: .automatic, transitionStyle: .crossDissolve) {
+                                            Play(room: rooms[i])
+                                        }
+                                    } else {
+                                        showCantJoinAlert.toggle()
                                     }
+                                }.alert(isPresented: $showCantJoinAlert) {
+                                    Alert(title: Text("Can't Join"), message: Text("Room already full."), dismissButton: .default(Text("Ok")))
                                 }
                             }
                         }
                     }
+                    .padding(.init(top: 0, leading: 8, bottom: 0, trailing: 8))
+                } else {
+                    Text("There is no games currently going on.")
+                        .font(.title2)
+                        .foregroundColor(.white)
+                        .padding(64)
+                        .lineLimit(nil)
+                        .multilineTextAlignment(.center)
                 }
-                .ignoresSafeArea()
-                .padding(.init(top: 0, leading: 8, bottom: 0, trailing: 8))
             }
-            if !showNewRoomDialog {
+           
+            if showNewRoomDialog {
+                NewRoomDialog(newRoomName: $newRoomName,
+                              showNewRoomDialog: $showNewRoomDialog)
+            } else {
                 VStack {
                     Spacer()
                     CreateNewRoomButton(showNewRoomDialog: $showNewRoomDialog)
                 }
-            }
-            
-            if showNewRoomDialog {
-                NewRoomDialog(newRoomName: $newRoomName,
-                              showNewRoomDialog: $showNewRoomDialog)
             }
         }.onAppear {
             fetchRooms()
@@ -67,7 +82,6 @@ struct Games: View {
         ref.observe(.value, with: { snapshot in
             rooms.removeAll()
             for case let room as DataSnapshot in snapshot.children {
-                print(room)
                 let roomDict = room.value! as! Dictionary<String, Any>
                 rooms.append(
                     GameRoom(id: roomDict["id"] as? String,
@@ -77,7 +91,6 @@ struct Games: View {
                              guest: Gamer(dict: roomDict["guest"] as? Dictionary<String, String>) ?? nil,
                              guestStatus: roomDict["guestStatus"]! as! Bool,
                              status: roomDict["status"]! as! Int))
-                print(rooms)
             }
         })
     }
